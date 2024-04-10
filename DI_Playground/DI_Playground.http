@@ -1,0 +1,6 @@
+@DI_Playground_HostAddress = http://localhost:5244
+
+GET {{DI_Playground_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
