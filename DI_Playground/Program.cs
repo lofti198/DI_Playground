@@ -8,9 +8,12 @@ namespace DI_Playground
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddKeyedSingleton<ISomeClass, SomeClassA>("A");
-            builder.Services.AddKeyedSingleton<ISomeClass, SomeClassB>("B");
-            
+            // Register your services as singletons
+            builder.Services.AddSingleton<SomeClassA>();
+            builder.Services.AddSingleton<SomeClassB>();
+
+            // Register the factory as a singleton too
+            builder.Services.AddSingleton<SomeClassFactory>();
             // Add services to the container.
 
             builder.Services.AddControllers();

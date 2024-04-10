@@ -1,26 +1,33 @@
-﻿namespace DI_Playground.Services.SomeTaskManagement
+﻿using System.Collections.Concurrent;
+
+namespace DI_Playground.Services.SomeTaskManagement
 {
     public class SomeClassFactory
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ConcurrentDictionary<string, ISomeClass> _instances = new ConcurrentDictionary<string, ISomeClass>();
 
         public SomeClassFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public ISomeClass Create(string key)
+        public ISomeClass GetOrCreate(string key)
         {
-            switch (key)
+            return _instances.GetOrAdd(key, k => CreateInstanceForKey(k));
+        }
+
+        private ISomeClass CreateInstanceForKey(string key)
+        {
+            // Logic to create the service based on the key.
+            return key switch
             {
-                case "A":
-                    return _serviceProvider.GetRequiredService<SomeClassA>();
-                case "B":
-                    return _serviceProvider.GetRequiredService<SomeClassB>();
-                default:
-                    throw new ArgumentException("Invalid key", nameof(key));
-            }
+                "A" => _serviceProvider.GetRequiredService<SomeClassA>(),
+                "B" => _serviceProvider.GetRequiredService<SomeClassB>(),
+                _ => throw new KeyNotFoundException($"No service found for key: {key}")
+            };
         }
     }
+
 
 }
