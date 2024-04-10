@@ -8,13 +8,13 @@ namespace DI_Playground.Controllers
     [ApiController]
     public class SomeController : ControllerBase
     {
-        private readonly SomeClassFactory _someClassFactory;
+        private readonly DITypeFactoryBase<string, ISomeClass> _someClassFactory;
 
-        public SomeController(SomeClassFactory someClassFactory)
+        public SomeController(DITypeFactoryBase<string, ISomeClass> someClassFactory)
         {
             _someClassFactory = someClassFactory;
         }
-        
+
         [HttpGet("SomeAction/{key}")] 
         public IActionResult SomeAction(string key)
         {

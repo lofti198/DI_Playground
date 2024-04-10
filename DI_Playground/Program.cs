@@ -12,8 +12,17 @@ namespace DI_Playground
             builder.Services.AddSingleton<SomeClassA>();
             builder.Services.AddSingleton<SomeClassB>();
 
-            // Register the factory as a singleton too
-            builder.Services.AddSingleton<SomeClassFactory>();
+            // Register the generic factory for ISomeClass with the specific factory method
+            builder.Services.AddSingleton<DITypeFactoryBase<string, ISomeClass>>(
+                serviceProvider => new DITypeFactoryBase<string, ISomeClass>(
+                    serviceProvider,
+                    (sp, key) => key switch
+                    {
+                        "A" => sp.GetRequiredService<SomeClassA>(),
+                        "B" => sp.GetRequiredService<SomeClassB>(),
+                        _ => throw new KeyNotFoundException($"No service found for key: {key}")
+                    }
+                ));
             // Add services to the container.
 
             builder.Services.AddControllers();
